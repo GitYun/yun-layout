@@ -1,3 +1,24 @@
+" Describe:	在normal模式下，使用<Tab>按键切换buffer或Tab
+" Last Change:	2018-9-25
+" Author:	neihaiyou
+" License:	MIT, see the LICENSE file
+
+
+if !exists("s:layout_cmd_loaded")
+    " 打开一个与当前相同的新标签页
+    nmap <A-t> :tab split<CR>
+    nmap tl :tabl<CR>
+    nmap tf :tabfirst<CR>
+    nnoremap <unique> <silent> <Tab> :call TabMap('n')<CR>
+    nnoremap <unique> <silent> <C-Tab> :call TabMap('p')<CR>
+    nmap tc :tabclose<CR>
+    nmap to :tabonly<CR>
+
+    let s:layout_cmd_loaded = 1
+    exec 'au FuncUndefined TabMap* source ' . expand('<sfile>')
+    finish
+endif
+
 if exists("g:layout_loaded")
     finish
 endif
@@ -44,9 +65,10 @@ function! TabMap(np)
 	endif
 
 	let l:cnt = 0
-	while l:cnt < l:buf.cnt
+	while l:cnt < l:buf.unamelisted.cnt
 	    exe 'bw ' . string(l:buf.unamelisted.bufnr[l:cnt])
 	    let l:cnt += 1
 	endwhile
     endif
 endfunc
+
